@@ -32,7 +32,7 @@ namespace EduManagementLab.Core.Services
             }
             return courseLineItem;
         }
-        public CourseLineItem CreateCourseLineItem(Guid courseId, string name, string description)
+        public CourseLineItem CreateCourseLineItem(Guid courseId, string name, string description, Guid? resouceId)
         {
             var course = _unitOfWork.Courses.GetCourse(courseId, true);
 
@@ -42,12 +42,20 @@ namespace EduManagementLab.Core.Services
             CourseLineItem newlineItem = new CourseLineItem()
             {
                 Name = name,
-                Description = description,                
+                Description = description,
                 LastUpdate = DateTime.Now,
             };
+
+            if (resouceId != null)
+            {
+                var resource = _unitOfWork.ResourceLinks.GetById((Guid)resouceId);
+                newlineItem.ResourceLink = resource;
+                newlineItem.ResourceId = resource.Id;
+            }
+
             course.CourseLineItems.Add(newlineItem);
 
-            _unitOfWork.CourseLineItems.Add(newlineItem); 
+            _unitOfWork.CourseLineItems.Add(newlineItem);
             _unitOfWork.Complete();
             return newlineItem;
 
@@ -65,8 +73,6 @@ namespace EduManagementLab.Core.Services
         public CourseLineItem DeleteCourseLineItem(Guid lineItemId)
         {
             var courseLineItem = GetCourseLineItem(lineItemId);
-
-            Guard.AgainstUnknownCourseLineItem(lineItemId, _unitOfWork);
 
             _unitOfWork.CourseLineItems.Remove(courseLineItem);
             _unitOfWork.Complete();

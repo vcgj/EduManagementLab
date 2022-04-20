@@ -26,6 +26,24 @@ namespace EduManagementLab.EfRepository.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Tools",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    DeepLinkingLaunchUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DeploymentId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IdentityServerClientId = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LaunchUrl = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LoginUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tools", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
@@ -43,23 +61,30 @@ namespace EduManagementLab.EfRepository.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "CourseLineItems",
+                name: "ResourceLinks",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CustomProperties = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ToolId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CourseLineItems", x => x.Id);
+                    table.PrimaryKey("PK_ResourceLinks", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CourseLineItems_Courses_CourseId",
+                        name: "FK_ResourceLinks_Courses_CourseId",
                         column: x => x.CourseId,
                         principalTable: "Courses",
                         principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ResourceLinks_Tools_ToolId",
+                        column: x => x.ToolId,
+                        principalTable: "Tools",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -87,6 +112,33 @@ namespace EduManagementLab.EfRepository.Migrations
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "CourseLineItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastUpdate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResourceLinkId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    ResourceId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CourseId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CourseLineItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CourseLineItems_Courses_CourseId",
+                        column: x => x.CourseId,
+                        principalTable: "Courses",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_CourseLineItems_ResourceLinks_ResourceLinkId",
+                        column: x => x.ResourceLinkId,
+                        principalTable: "ResourceLinks",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -122,6 +174,11 @@ namespace EduManagementLab.EfRepository.Migrations
                 column: "CourseId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_CourseLineItems_ResourceLinkId",
+                table: "CourseLineItems",
+                column: "ResourceLinkId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CourseMemberships_CourseId",
                 table: "CourseMemberships",
                 column: "CourseId");
@@ -140,6 +197,16 @@ namespace EduManagementLab.EfRepository.Migrations
                 name: "IX_LineItemResults_MembershipId",
                 table: "LineItemResults",
                 column: "MembershipId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResourceLinks_CourseId",
+                table: "ResourceLinks",
+                column: "CourseId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ResourceLinks_ToolId",
+                table: "ResourceLinks",
+                column: "ToolId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -154,10 +221,16 @@ namespace EduManagementLab.EfRepository.Migrations
                 name: "CourseMemberships");
 
             migrationBuilder.DropTable(
-                name: "Courses");
+                name: "ResourceLinks");
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "Courses");
+
+            migrationBuilder.DropTable(
+                name: "Tools");
         }
     }
 }

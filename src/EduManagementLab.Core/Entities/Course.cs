@@ -23,6 +23,7 @@ namespace EduManagementLab.Core.Entities
         public DateTime EndDate { get; set; }
         public List<Membership> Memperships { get; set; } = new List<Membership>();
         public List<CourseLineItem> CourseLineItems { get; set; } = new List<CourseLineItem>();
+        public List<ResourceLink> ResourceLinks { get; set; } = new List<ResourceLink>();
 
         public class Membership
         {

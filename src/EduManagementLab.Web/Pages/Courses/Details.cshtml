@@ -283,6 +283,13 @@
                         <form method="post" asp-route-courseId="@Model.Course.Id" asp-page-handler="CreateLineItem">
                             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                             <div class="form-group">
+                                <label>Select Tool</label>
+                                <select asp-for="lineItemInput.selectedResource" asp-items="Model.ResouceLinks" class="form-control">
+                                    <option value="">Select a Resource Link</option>
+                                </select>
+                                <span asp-validation-for="lineItemInput.selectedResource" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
                                 <label asp-for="lineItemInput.Name" class="control-label"></label>
                                 <input asp-for="lineItemInput.Name" class="form-control" />
                                 <span asp-validation-for="lineItemInput.Name" class="text-danger"></span>

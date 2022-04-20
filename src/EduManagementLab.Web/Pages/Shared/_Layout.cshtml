@@ -29,6 +29,12 @@
                             <a class="nav-link text-dark" asp-area="" asp-page="/Courses/Index">Courses</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/Tools/Index">Tools</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-page="/ResourceLinks/Index">ResourceLinks</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
                     </ul>
@@ -54,12 +60,12 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
 
     @*@using IdentityServer4.Extensions
-    @inject EduManagementLab.Core.Services.CourseService courseService;
-    @inject EduManagementLab.Core.Services.UserService userService;
-    @{
+        @inject EduManagementLab.Core.Services.CourseService courseService;
+        @inject EduManagementLab.Core.Services.UserService userService;
+        @{
         var userId = Guid.Parse(Context.User?.GetSubjectId());
-        var user = userService.GetUser(userId); 
-    }*@
+        var user = userService.GetUser(userId);
+        }*@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

@@ -15,13 +15,16 @@ namespace EduManagementLab.EfRepository
             Courses = new CourseRepository(_context);
             CourseLineItems = new CourseLineItemRepository(_context);
             LineItemResults = new LineItemResultsRepository(_context);
+            Tools = new IMSToolRepository(_context);
+            ResourceLinks = new ResourceLinkRepository(_context);
         }
 
         public IUserRepository Users { get; private set; }
         public ICourseRepository Courses { get; private set; }
         public ICourseLineItemRepository CourseLineItems { get; set; }
         public ILineItemResultsRepository LineItemResults { get; }
-
+        public IIMSToolRepository Tools { get; }
+        public IResourceLinkRepository ResourceLinks { get; }
         public int Complete()
         {
             return _context.SaveChanges();

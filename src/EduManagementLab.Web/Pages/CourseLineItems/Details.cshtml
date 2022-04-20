@@ -1,4 +1,6 @@
 ﻿@page
+@using IdentityServer4.Extensions
+@using LtiAdvantage
 @model EduManagementLab.Web.Pages.CourseLineItems.DetailsModel
 @{
     ViewData["Title"] = "Details";
@@ -15,6 +17,14 @@
             </div>
         </div>
         <hr />
+        <form method="post"
+          asp-page-handler="LaunchOIDC"
+          asp-route-id="@Model.CourseLineItem.ResourceLink.Id"
+          asp-route-messageType="@Constants.Lti.LtiResourceLinkRequestMessageType"
+          asp-route-courseId="@Model.Course.Id"
+          asp-route-personId="@User?.GetSubjectId()">
+            <button type="submit" class="btn btn-primary">Launch Tool OIDC</button>
+        </form>
         <dl class="row">
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.CourseLineItem.Description)

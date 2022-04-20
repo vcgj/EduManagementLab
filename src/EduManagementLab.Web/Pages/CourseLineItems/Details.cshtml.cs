@@ -1,11 +1,14 @@
 using EduManagementLab.Core.Entities;
 using EduManagementLab.Core.Exceptions;
 using EduManagementLab.Core.Services;
+using EduManagementLab.IdentityServer;
+using IdentityModel.Client;
+using IdentityServer4.Extensions;
+using LtiAdvantage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 
 namespace EduManagementLab.Web.Pages.CourseLineItems
@@ -15,11 +18,24 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
         private readonly CourseService _courseService;
         private readonly UserService _userService;
         private readonly CourseLineItemService _courseLineItemService;
-        public DetailsModel(CourseService courseService, UserService userService, CourseLineItemService courseLineItemService)
+        private readonly ILogger<DetailsModel> _logger;
+        private readonly ResourceLinkService _resourceLinkService;
+        private readonly IMSToolService _IIMSToolService;
+
+        public DetailsModel(
+            CourseService courseService,
+            UserService userService,
+            CourseLineItemService courseLineItemService,
+            ResourceLinkService resourceLinkService,
+            IMSToolService iMSToolService,
+            ILogger<DetailsModel> logger)
         {
             _courseService = courseService;
             _userService = userService;
             _courseLineItemService = courseLineItemService;
+            _logger = logger;
+            _resourceLinkService = resourceLinkService;
+            _IIMSToolService = iMSToolService;
         }
         [BindProperty]
         public List<SelectListItem> filterList { get; } = new List<SelectListItem>();
@@ -28,8 +44,6 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
         public Course Course { get; set; }
         public CourseLineItem CourseLineItem { get; set; }
         public SelectList UserListItems { get; set; }
-        [BindProperty]
-        public bool IsChecked { get; set; }
         [BindProperty]
         public List<UserScoreDto> userScoreList { get; set; } = new List<UserScoreDto>();
         [BindProperty]
@@ -153,6 +167,61 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
                 }
             }
 
+        }
+        public async Task<IActionResult> OnPostLaunchOIDCAsync(Guid id, string messageType, string courseId, Guid personId)
+        {
+            IMSTool tool;
+            ResourceLink resourceLink = new ResourceLink();
+            if (messageType == Constants.Lti.LtiResourceLinkRequestMessageType)
+            {
+                resourceLink = _resourceLinkService.GetResourceLink(id);
+                if (resourceLink == null)
+                {
+                    _logger.LogError("Resource link not found.");
+                    return BadRequest();
+                }
+
+                tool = resourceLink.Tool;
+            }
+            else
+            {
+                tool = _IIMSToolService.GetTool(id);
+            }
+
+            if (tool == null)
+            {
+                _logger.LogError("Tool not found.");
+                return BadRequest();
+            }
+
+            var client = Config.Clients.FirstOrDefault(t => t.ClientId == tool.IdentityServerClientId);
+            if (client == null)
+            {
+                _logger.LogError("Client not found");
+                return BadRequest();
+            }
+
+            // The issuer identifier for the platform
+            string iss = "https://localhost:5001/",
+
+                // The platform identifier for the user to login
+                login_hint = personId.ToString(),
+
+                // The endpoint to be executed at the end of the OIDC authentication flow
+                target_link_uri = tool.LaunchUrl,
+
+                // The identifier of the LtiResourceLink message (or the deep link message, etc)
+                lti_message_hint = JsonConvert.SerializeObject(new { id, messageType, courseId });
+
+            Parameters values = new Parameters();
+            values.Add("iss", iss);
+            values.Add("login_hint", login_hint);
+            values.Add("target_link_uri", target_link_uri);
+            values.Add("lti_message_hint", lti_message_hint);
+
+            var url = new RequestUrl(tool.LoginUrl).Create(values);
+            _logger.LogInformation($"Launching {tool.Name} using GET {url}");
+            return Redirect(url);
         }
     }
 }

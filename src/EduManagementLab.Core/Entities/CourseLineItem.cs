@@ -10,6 +10,8 @@ namespace EduManagementLab.Core.Entities
         public string Name { get; set; }
         public string? Description { get; set; }
         public DateTime LastUpdate { get; set; }
+        public ResourceLink? ResourceLink { get; set; }
+        public Guid ResourceId { get; set; }
         public List<Result> Results { get; set; } = new List<Result>();
         public class Result
         {

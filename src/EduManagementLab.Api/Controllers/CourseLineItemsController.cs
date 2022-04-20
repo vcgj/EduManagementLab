@@ -72,7 +72,7 @@ namespace EduManagementLab.Api.Controllers
         [ProducesResponseType(typeof(CourseLineItemDto), StatusCodes.Status201Created)]
         public ActionResult<CourseLineItemDto> AddCourseLineItem(Guid courseId, string lineItemName, string lineItemDescription)
         {
-            var newCourseLineItem = _courseLineItemService.CreateCourseLineItem(courseId, lineItemName, lineItemDescription);
+            var newCourseLineItem = _courseLineItemService.CreateCourseLineItem(courseId, lineItemName, lineItemDescription, null);
             return CreatedAtAction(nameof(GetCourseLineItem), new { lineItemId = newCourseLineItem.Id }, _mapper.Map<CourseLineItemDto>(newCourseLineItem));
         }
 

@@ -16,6 +16,8 @@ builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<CourseService>();
 builder.Services.AddTransient<CourseLineItemService>();
+builder.Services.AddTransient<IMSToolService>();
+builder.Services.AddTransient<ResourceLinkService>();
 
 builder.Services.AddControllersWithViews();
 

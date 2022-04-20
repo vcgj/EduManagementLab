@@ -1,0 +1,77 @@
+﻿@page
+@model EduManagementLab.Web.Pages.Tools.RegisterIMSToolModel
+@{
+}
+@{
+    ViewData["Title"] = "Tools";
+}
+
+<div class="container-fluid">
+    <h4>Register Tool</h4>
+    <hr />
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <input type="hidden" asp-for="tool.DeploymentId" />
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="card">
+                    <h5 class="card-header bg-secondary text-light">
+                        Tool Settings
+                    </h5>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="tool.Name"></label>
+                            <input asp-for="tool.Name" class="form-control" />
+                            <span asp-validation-for="tool.Name" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.LoginUrl"></label>
+                            <tooltip asp-for="tool.LoginUrl"></tooltip>
+                            <input asp-for="tool.LoginUrl" class="form-control" />
+                            <span asp-validation-for="tool.LoginUrl" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.LaunchUrl"></label>
+                            <tooltip asp-for="tool.LaunchUrl"></tooltip>
+                            <input asp-for="tool.LaunchUrl" class="form-control" />
+                            <span asp-validation-for="tool.LaunchUrl" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.DeepLinkingLaunchUrl"></label>
+                            <tooltip asp-for="tool.DeepLinkingLaunchUrl"></tooltip>
+                            <input asp-for="tool.DeepLinkingLaunchUrl" class="form-control" />
+                            <span asp-validation-for="tool.DeepLinkingLaunchUrl" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.CustomProperties"></label>
+                            <tooltip asp-for="tool.CustomProperties"></tooltip>
+                            <textarea asp-for="tool.CustomProperties" class="form-control text-monospace" rows="3" placeholder="Put each name=value pair on a separate line."></textarea>
+                            <span asp-validation-for="tool.CustomProperties" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.ClientId"></label>
+                            <tooltip asp-for="tool.ClientId"></tooltip>
+                            <input asp-for="tool.ClientId" class="form-control" />
+                            <span asp-validation-for="tool.ClientId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.PublicKey"></label>
+                            <tooltip asp-for="tool.PublicKey"></tooltip>
+                            For development keys see <a href="https://lti-ri.imsglobal.org/keygen/index" target="_blank">https://lti-ri.imsglobal.org/keygen/index</a>
+                            <textarea asp-for="tool.PublicKey" class="form-control text-monospace key" rows="5" placeholder="Enter the public key in PEM format."></textarea>
+                            <span asp-validation-for="tool.PublicKey" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="tool.DeploymentId"></label>
+                            <tooltip asp-for="tool.DeploymentId"></tooltip>
+                            <input asp-for="tool.DeploymentId" class="form-control" readonly="readonly" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-secondary" />
+        </div>
+    </form>
+</div>

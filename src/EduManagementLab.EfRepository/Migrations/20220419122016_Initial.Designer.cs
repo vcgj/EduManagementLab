@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EduManagementLab.EfRepository.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20220408184556_Initial")]
+    [Migration("20220419122016_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,9 +98,17 @@ namespace EduManagementLab.EfRepository.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<Guid>("ResourceId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ResourceLinkId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CourseId");
+
+                    b.HasIndex("ResourceLinkId");
 
                     b.ToTable("CourseLineItems");
                 });
@@ -130,6 +138,75 @@ namespace EduManagementLab.EfRepository.Migrations
                     b.HasIndex("MembershipId");
 
                     b.ToTable("LineItemResults");
+                });
+
+            modelBuilder.Entity("EduManagementLab.Core.Entities.IMSTool", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeepLinkingLaunchUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("DeploymentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("IdentityServerClientId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LaunchUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LoginUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Tools");
+                });
+
+            modelBuilder.Entity("EduManagementLab.Core.Entities.ResourceLink", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("CourseId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("CustomProperties")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<Guid>("ToolId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CourseId");
+
+                    b.HasIndex("ToolId");
+
+                    b.ToTable("ResourceLinks");
                 });
 
             modelBuilder.Entity("EduManagementLab.Core.Entities.User", b =>
@@ -191,6 +268,12 @@ namespace EduManagementLab.EfRepository.Migrations
                     b.HasOne("EduManagementLab.Core.Entities.Course", null)
                         .WithMany("CourseLineItems")
                         .HasForeignKey("CourseId");
+
+                    b.HasOne("EduManagementLab.Core.Entities.ResourceLink", "ResourceLink")
+                        .WithMany()
+                        .HasForeignKey("ResourceLinkId");
+
+                    b.Navigation("ResourceLink");
                 });
 
             modelBuilder.Entity("EduManagementLab.Core.Entities.CourseLineItem+Result", b =>
@@ -212,11 +295,28 @@ namespace EduManagementLab.EfRepository.Migrations
                     b.Navigation("Membership");
                 });
 
+            modelBuilder.Entity("EduManagementLab.Core.Entities.ResourceLink", b =>
+                {
+                    b.HasOne("EduManagementLab.Core.Entities.Course", null)
+                        .WithMany("ResourceLinks")
+                        .HasForeignKey("CourseId");
+
+                    b.HasOne("EduManagementLab.Core.Entities.IMSTool", "Tool")
+                        .WithMany()
+                        .HasForeignKey("ToolId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Tool");
+                });
+
             modelBuilder.Entity("EduManagementLab.Core.Entities.Course", b =>
                 {
                     b.Navigation("CourseLineItems");
 
                     b.Navigation("Memperships");
+
+                    b.Navigation("ResourceLinks");
                 });
 
             modelBuilder.Entity("EduManagementLab.Core.Entities.CourseLineItem", b =>

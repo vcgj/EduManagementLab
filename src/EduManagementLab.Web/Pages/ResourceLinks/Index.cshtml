@@ -1,0 +1,26 @@
+﻿@page
+@using IdentityServer4.Extensions
+@using LtiAdvantage
+@model EduManagementLab.Web.Pages.ResourceLinks.IndexModel
+@{
+}
+
+<a class="btn btn-primary m-2" asp-page="/ResourceLinks/CreateResourceLink">Add ResourceLink</a>
+<div class="row align-items-start">
+    @foreach (var resource in @Model.ResourceLinksList)
+    {
+        <div class="card m-2" style="width:25%">
+            <div class="card-body">
+                <h5 class="card-title"><strong>Title: </strong>@resource.Title</h5>
+                <p class="card-text"><strong>Description: </strong> @resource.Description</p>
+                <p class="card-text"><strong>Tool Launch URL: </strong>@resource.Tool.LaunchUrl</p>
+
+                <hr>
+                <a href="" class="btn btn-primary m-2">Edit</a>
+                <form method="post" asp-page-handler="DeleteResourceLink" asp-route-resourceId="@resource.Id">
+                    <button type="submit" class="btn btn-danger m-2">Delete</button>
+                </form>
+            </div>
+        </div>
+    }
+</div>

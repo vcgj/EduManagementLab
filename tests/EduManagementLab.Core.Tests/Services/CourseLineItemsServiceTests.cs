@@ -104,7 +104,7 @@ namespace EduManagementLab.Core.Tests.Services
         public void CreateCourseLineItem_ReturnsCorrectCourseLineItem()
         {
             var createdCourse = _courseService.GetCourse(Guid.Parse("4E228873-0468-4BE6-A14B-48DE5E7CFFFB"), true);
-            var createdCourseLineItem = _courseLineItemService.CreateCourseLineItem(createdCourse.Id, "Assignment3", "DescAssignment3");
+            var createdCourseLineItem = _courseLineItemService.CreateCourseLineItem(createdCourse.Id, "Assignment3", "DescAssignment3", null);
 
             var courseLineItem = _dataContext.CourseLineItems.Single(b => b.Name == "Assignment3");
             Assert.Equal("Assignment3", courseLineItem.Name);
@@ -113,7 +113,7 @@ namespace EduManagementLab.Core.Tests.Services
         [Fact]
         public void CreateCourseLineItem_ExistingObjectNamePassed_ThrowsCourseLineItemAlreadyExistException()
         {
-            Assert.Throws<CourseLineItemAlreadyExistException>(() => _courseLineItemService.CreateCourseLineItem(Guid.Parse("4E228873-0468-4BE6-A14B-48DE5E7CFFFB"), "Assignment1", ""));
+            Assert.Throws<CourseLineItemAlreadyExistException>(() => _courseLineItemService.CreateCourseLineItem(Guid.Parse("4E228873-0468-4BE6-A14B-48DE5E7CFFFB"), "Assignment1", "", null));
         }
 
         [Fact]

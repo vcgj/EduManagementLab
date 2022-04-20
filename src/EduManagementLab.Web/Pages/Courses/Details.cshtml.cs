@@ -14,12 +14,14 @@ namespace EduManagementLab.Web.Pages.Courses
     {
         private readonly CourseService _courseService;
         private readonly UserService _userService;
+        private readonly ResourceLinkService _resourceLinkService;
         private readonly CourseLineItemService _courseLineItemService;
-        public DetailsModel(CourseService courseService, UserService userService, CourseLineItemService courseLineItemService)
+        public DetailsModel(ResourceLinkService resourceLinkService, CourseService courseService, UserService userService, CourseLineItemService courseLineItemService)
         {
             _courseService = courseService;
             _userService = userService;
             _courseLineItemService = courseLineItemService;
+            _resourceLinkService = resourceLinkService;
         }
         [BindProperty]
         public int SelectedIteminSortingList { get; set; }
@@ -30,6 +32,8 @@ namespace EduManagementLab.Web.Pages.Courses
         public Course Course { get; set; }
         public SelectList UserListItems { get; set; }
         public SelectList LineItemListItems { get; set; }
+        public List<SelectListItem> ResouceLinks { get; set; } = new List<SelectListItem>();
+
         [BindProperty]
         public DateTime SelectedEndDate { get; set; }
         public int SelectedOption { get; set; }
@@ -62,10 +66,12 @@ namespace EduManagementLab.Web.Pages.Courses
             [Required]
             public string Name { get; set; }
             public string? Description { get; set; }
+            [Required]
+            public Guid selectedResource { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync(Guid courseId)
-        {            
+        {
             try
             {
                 PopulateProperties(courseId);
@@ -80,6 +86,16 @@ namespace EduManagementLab.Web.Pages.Courses
         {
             LoginUserId = Guid.Parse(User?.GetSubjectId());
             Course = _courseService.GetCourse(courseId, true);
+
+            var resouceLinkList = _resourceLinkService.GetResourceLinks();
+
+            if (resouceLinkList != null)
+            {
+                foreach (var resource in resouceLinkList)
+                {
+                    ResouceLinks.Add(new SelectListItem { Text = resource.Title, Value = resource.Id.ToString() });
+                }
+            }
 
             OnPostSortingListAsync(SelectedIteminSortingList, Course.Id);
 
@@ -169,7 +185,7 @@ namespace EduManagementLab.Web.Pages.Courses
             ICollection<ValidationResult> results = null;
             if (Validate(lineItemInput, out results))
             {
-                _courseLineItemService.CreateCourseLineItem(courseId, lineItemInput.Name, lineItemInput.Description);
+                _courseLineItemService.CreateCourseLineItem(courseId, lineItemInput.Name, lineItemInput.Description, lineItemInput.selectedResource);
             }
             PopulateProperties(courseId);
             return RedirectToPage("./Details", new { courseId = courseId });

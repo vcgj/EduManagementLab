@@ -16,11 +16,11 @@ namespace EduManagementLab.EfRepository.Repositories
         {
             if (includeResults == true)
             {
-                return _context.CourseLineItems.Include(c => c.Results).ThenInclude(c => c.Membership).FirstOrDefault(c => c.Id == lineItemId);
+                return _context.CourseLineItems.Include(r => r.ResourceLink).ThenInclude(t => t.Tool).Include(c => c.Results).ThenInclude(c => c.Membership).FirstOrDefault(c => c.Id == lineItemId);
             }
             else
             {
-                return _context.CourseLineItems.FirstOrDefault(c => c.Id == lineItemId);
+                return _context.CourseLineItems.Include(r => r.ResourceLink).ThenInclude(t => t.Tool).FirstOrDefault(c => c.Id == lineItemId);
             }
         }
     }

@@ -1,5 +1,7 @@
-﻿using IdentityServer4;
+﻿using IdentityModel;
+using IdentityServer4;
 using IdentityServer4.Models;
+using LtiAdvantage;
 
 namespace EduManagementLab.IdentityServer
 {
@@ -34,10 +36,21 @@ namespace EduManagementLab.IdentityServer
                 AllowedScopes = new List<string> {"eduManagementLabApi.read"},
                 AllowedCorsOrigins = new List<string>
                 {
-                    "https://localhost:7134",
-                    "https://localhost:7243",
+                    "https://localhost:5002",
+                    "https://localhost:5001",
                     "https://localhost:7187"
                 }
+            },
+            new Client
+            {
+                //Tool Client
+                ClientId = "IMSTool",
+                ClientName = "EduLabTool",
+                AllowedGrantTypes = GrantTypes.Code,
+                ClientSecrets = new List<Secret> {new Secret("ToolTest".Sha256())},
+                AllowedScopes = LtiScopes,
+                RedirectUris = { "https://lti-ri.imsglobal.org/lti/tools/2847/launches" },
+                RequireConsent = false,
             },
             new Client
             {
@@ -68,6 +81,16 @@ namespace EduManagementLab.IdentityServer
                 ApiSecrets = new List<Secret> {new Secret("TestEduApi".Sha256())},
                 UserClaims = new List<string> {"role"}
             }
+        };
+        public static ICollection<string> LtiScopes => new[]
+{
+            OidcConstants.StandardScopes.OpenId,
+            Constants.LtiScopes.Ags.LineItem,
+            Constants.LtiScopes.Ags.LineItemReadonly,
+            Constants.LtiScopes.Ags.ResultReadonly,
+            Constants.LtiScopes.Ags.Score,
+            Constants.LtiScopes.Ags.ScoreReadonly,
+            Constants.LtiScopes.Nrps.MembershipReadonly
         };
     }
 }

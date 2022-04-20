@@ -67,6 +67,14 @@ namespace EduManagementLab.Core.Services
             _unitOfWork.Complete();
             return course;
         }
+        public Course UpdateCourseResourceLink(Guid courseId, ResourceLink resourceLink)
+        {
+            var course = GetCourse(courseId);
+            course.ResourceLinks.Add(resourceLink);
+            _unitOfWork.Courses.Update(course);
+            _unitOfWork.Complete();
+            return course;
+        }
         public void DeleteCourse(Guid id)
         {
             var course = GetCourse(id);
@@ -107,7 +115,7 @@ namespace EduManagementLab.Core.Services
             _unitOfWork.Courses.Update(course);
             _unitOfWork.Complete();
             return membershipToDelete;
-        }        
+        }
         public Course.Membership UpdateMemberEndDate(Guid courseId, Guid userId, DateTime endDate, bool endDateActive = false)
         {
             var course = GetCourse(courseId, true);
@@ -116,11 +124,11 @@ namespace EduManagementLab.Core.Services
 
             var membershipToInactive = course.Memperships.FirstOrDefault(u => u.UserId == userId && u.CourseId == courseId);
 
-            if(endDateActive == true)
+            if (endDateActive == true)
             {
                 membershipToInactive.EndDate = null;
-            } 
-            else 
+            }
+            else
             {
                 membershipToInactive.EndDate = endDate;
             }

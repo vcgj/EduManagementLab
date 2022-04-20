@@ -1,0 +1,55 @@
+﻿@page
+@model EduManagementLab.Web.Pages.ResourceLinks.CreateResourceLinkModel
+@{
+}
+<div class="container-fluid">
+    <h4>Add ResourceLink</h4>
+    <hr />
+    <form method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-lg-6 mb-3">
+                <div class="card">
+                    <h5 class="card-header bg-secondary text-light">
+                        ResourceLink Settings
+                    </h5>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label asp-for="ResourceLink.Title"></label>
+                            <input asp-for="ResourceLink.Title" class="form-control" />
+                            <span asp-validation-for="ResourceLink.Title" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ResourceLink.Description"></label>
+                            <input asp-for="ResourceLink.Description" class="form-control" />
+                            <span asp-validation-for="ResourceLink.Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Tool</label>
+                            <select asp-for="ResourceLink.selectedTool" asp-items="Model.tools" class="form-control">
+                                <option value="">Select a Tool</option>
+                            </select>
+                            <span asp-validation-for="ResourceLink.selectedTool" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label>Select course</label>
+                            <select asp-for="ResourceLink.selectedCourse" asp-items="Model.courses" asp- class="form-control">
+                                <option value="">Select a course</option>
+                            </select>
+                            <span asp-validation-for="ResourceLink.selectedTool" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="ResourceLink.CustomProperties"></label>
+                            <tooltip asp-for="ResourceLink.CustomProperties" html="true"></tooltip>
+                            <textarea asp-for="ResourceLink.CustomProperties" class="form-control text-monospace" rows="3"></textarea>
+                            <span asp-validation-for="ResourceLink.CustomProperties" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Create" class="btn btn-secondary" />
+        </div>
+    </form>
+</div>
