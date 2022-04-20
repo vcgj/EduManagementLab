@@ -55,13 +55,13 @@ namespace EduManagementLab.Web.Pages.Tools
         }
         public void loadDeploymentId()
         {
-            tool.ClientId = "IMSTool";
-            tool.Name = "EduLabTool";
+            tool.ClientId = "oidcEduWebApp";
+            tool.Name = "ASP.NET Core EduManagementLab Web";
             tool.LaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/launches";
             tool.DeepLinkingLaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/deep_link_launches";
             tool.LoginUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/login_initiations";
             tool.DeploymentId = "Key1";
-            tool.PublicKey = "ToolTest".Sha256();
+            tool.PublicKey = "TestEduApi".Sha256();
         }
         public IActionResult OnPost()
         {

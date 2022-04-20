@@ -46,7 +46,7 @@ namespace EduManagementLab.IdentityServer
                 //Tool Client
                 ClientId = "IMSTool",
                 ClientName = "EduLabTool",
-                AllowedGrantTypes = GrantTypes.Code,
+                AllowedGrantTypes = GrantTypes.ClientCredentials,
                 ClientSecrets = new List<Secret> {new Secret("ToolTest".Sha256())},
                 AllowedScopes = LtiScopes,
                 RedirectUris = { "https://lti-ri.imsglobal.org/lti/tools/2847/launches" },
