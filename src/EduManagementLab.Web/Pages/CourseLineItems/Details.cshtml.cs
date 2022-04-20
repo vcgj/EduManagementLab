@@ -208,10 +208,11 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
                 login_hint = personId.ToString(),
 
                 // The endpoint to be executed at the end of the OIDC authentication flow
-                target_link_uri = tool.LaunchUrl,
+                target_link_uri = tool.DeepLinkingLaunchUrl,
+                lti_deployment_id= "Key 1",
 
                 // The identifier of the LtiResourceLink message (or the deep link message, etc)
-                lti_message_hint = JsonConvert.SerializeObject(new { id, messageType, courseId });
+            lti_message_hint = JsonConvert.SerializeObject(new { id, messageType, courseId });
 
             Parameters values = new Parameters();
             values.Add("iss", iss);
