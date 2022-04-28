@@ -1,10 +1,11 @@
 using EduManagementLab.Core.Entities;
 using EduManagementLab.Core.Services;
 using EduManagementLab.IdentityServer;
-using IdentityModel;
-using IdentityServer4.Models;
+using IdentityServer4.Extensions;
+using LtiAdvantage.IdentityServer4;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Newtonsoft.Json.Linq;
 using System.ComponentModel.DataAnnotations;
 
 namespace EduManagementLab.Web.Pages.Tools
@@ -57,14 +58,20 @@ namespace EduManagementLab.Web.Pages.Tools
         {
             tool.ClientId = "IMSTool";
             tool.Name = "EduLabTool";
-            tool.LaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/launches";
-            tool.DeepLinkingLaunchUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/deep_link_launches";
-            tool.LoginUrl = "https://lti-ri.imsglobal.org/lti/tools/2847/login_initiations";
+            tool.LaunchUrl = "https://localhost:44308/Tool/0300e6d518c41de7";
+            tool.DeepLinkingLaunchUrl = "https://localhost:44308/Tool/0300e6d518c41de7";
+            tool.LoginUrl = "https://localhost:44308/OidcLogin";
             tool.DeploymentId = "Key1";
-            tool.PublicKey = "ToolTest".Sha256();
+            tool.PublicKey = Config.publicKey;
+
+            // These are the platform's Identity Server properties
+            //tool.Issuer = "https://localhost:5001";
+            //tool.AuthorizeUrl = "https://localhost:5001/connect/authorize";
+            //tool.JwkSetUrl = "https://localhost:5001/.well-known/openid-configuration/jwks";
+            //tool.TokenUrl = "https://localhost:5001/connect/token";
         }
         public IActionResult OnPost()
-        {
+        {   
             if (ModelState.IsValid)
             {
                 if (Config.Clients.Any(c => c.ClientId == tool.ClientId && c.ClientSecrets.Any(c => c.Value == tool.PublicKey)))

@@ -3,6 +3,7 @@ using EduManagementLab.Core.Interfaces;
 using EduManagementLab.Core.Services;
 using EduManagementLab.EfRepository;
 using EduManagementLab.IdentityServer;
+using EduManagementLab.Core.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +17,10 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<CourseService>();
+builder.Services.AddTransient<CourseLineItemService>();
+builder.Services.AddTransient<IMSToolService>();
+builder.Services.AddTransient<ResourceLinkService>();
 
 builder.Services.AddIdentityServer()
     .AddInMemoryIdentityResources(Config.IdentityResources)
@@ -24,7 +29,10 @@ builder.Services.AddIdentityServer()
     .AddInMemoryApiScopes(Config.ApiScopes)
     .AddProfileService<CustomProfileService>()
     .AddResourceOwnerValidator<CustomResourceOwnerPasswordValidator>()
-    .AddDeveloperSigningCredential();
+    .AddDeveloperSigningCredential()
+    // Adds support for client authentication using JWT bearer assertions
+    // where token is signed by a private key stored in PEM format. 
+    .AddLtiJwtBearerClientAuthentication();
 
 builder.Services.AddAuthentication();
 

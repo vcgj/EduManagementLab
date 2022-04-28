@@ -48,6 +48,7 @@ builder.Services.AddAuthentication(options =>
     options.SaveTokens = true;
 });
 
+
 builder.Services.AddRazorPages();
 
 var app = builder.Build();

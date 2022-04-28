@@ -3,7 +3,6 @@ using EduManagementLab.Core.Exceptions;
 using EduManagementLab.Core.Services;
 using EduManagementLab.IdentityServer;
 using IdentityModel.Client;
-using IdentityServer4.Extensions;
 using LtiAdvantage;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -172,7 +171,7 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
         {
             IMSTool tool;
             ResourceLink resourceLink = new ResourceLink();
-            if (messageType == Constants.Lti.LtiResourceLinkRequestMessageType)
+            if (messageType == Constant.Lti.LtiResourceLinkRequestMessageType)
             {
                 resourceLink = _resourceLinkService.GetResourceLink(id);
                 if (resourceLink == null)
@@ -202,14 +201,15 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
             }
 
             // The issuer identifier for the platform
-            string iss = "https://localhost:5001/",
+            string iss = "https://localhost:5001",
 
                 // The platform identifier for the user to login
                 login_hint = personId.ToString(),
 
                 // The endpoint to be executed at the end of the OIDC authentication flow
-                target_link_uri = tool.DeepLinkingLaunchUrl,
-                lti_deployment_id= "Key 1",
+                target_link_uri = tool.LaunchUrl,
+                lti_deployment_id= tool.DeploymentId,
+                client_id = tool.IdentityServerClientId,
 
                 // The identifier of the LtiResourceLink message (or the deep link message, etc)
             lti_message_hint = JsonConvert.SerializeObject(new { id, messageType, courseId });
@@ -219,6 +219,8 @@ namespace EduManagementLab.Web.Pages.CourseLineItems
             values.Add("login_hint", login_hint);
             values.Add("target_link_uri", target_link_uri);
             values.Add("lti_message_hint", lti_message_hint);
+            values.Add("lti_deployment_id", lti_deployment_id);
+            values.Add("client_id", client_id);
 
             var url = new RequestUrl(tool.LoginUrl).Create(values);
             _logger.LogInformation($"Launching {tool.Name} using GET {url}");

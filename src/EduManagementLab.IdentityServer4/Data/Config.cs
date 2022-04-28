@@ -2,11 +2,15 @@
 using IdentityServer4;
 using IdentityServer4.Models;
 using LtiAdvantage;
+using Newtonsoft.Json.Linq;
 
 namespace EduManagementLab.IdentityServer
 {
     public static class Config
     {
+        private static JObject jsonObj = JObject.Parse(File.ReadAllText(@"C:\Users\V\source\repos\EduManagementLab_Latest\src\EduManagementLab.IdentityServer4\Data\PublicKey.json"));
+
+        public static string publicKey = jsonObj.SelectToken("publicKey").ToString();
         public static IEnumerable<IdentityResource> IdentityResources => new List<IdentityResource>
         {
             new IdentityResources.OpenId(),
@@ -46,15 +50,22 @@ namespace EduManagementLab.IdentityServer
                 //Tool Client
                 ClientId = "IMSTool",
                 ClientName = "EduLabTool",
-                AllowedGrantTypes = GrantTypes.Code,
-                ClientSecrets = new List<Secret> {new Secret("ToolTest".Sha256())},
+                AllowedGrantTypes = GrantTypes.ImplicitAndClientCredentials,
+                ClientSecrets = new List<Secret>
+                {
+                    new Secret
+                    {
+                        Type = Core.Validation.Constants.SecretTypes.PublicPemKey,
+                        Value = publicKey
+                    }
+                },
                 AllowedScopes = LtiScopes,
-                RedirectUris = { "https://localhost:5002/signin-oidc" },
+                RedirectUris = { "https://localhost:44308/Tool/0300e6d518c41de7" },
                 RequireConsent = false,
             },
             new Client
             {
-                //OpenID Connect
+                //OpenID Connect IDS
                 ClientId = "oidcEduWebApp",
                 ClientName = "ASP.NET Core EduManagementLab Web",
                 ClientSecrets =  {new Secret("TestEduApi".Sha256())},
@@ -85,12 +96,12 @@ namespace EduManagementLab.IdentityServer
         public static ICollection<string> LtiScopes => new[]
 {
             OidcConstants.StandardScopes.OpenId,
-            Constants.LtiScopes.Ags.LineItem,
-            Constants.LtiScopes.Ags.LineItemReadonly,
-            Constants.LtiScopes.Ags.ResultReadonly,
-            Constants.LtiScopes.Ags.Score,
-            Constants.LtiScopes.Ags.ScoreReadonly,
-            Constants.LtiScopes.Nrps.MembershipReadonly
+            Constant.LtiScopes.Ags.LineItem,
+            Constant.LtiScopes.Ags.LineItemReadonly,
+            Constant.LtiScopes.Ags.ResultReadonly,
+            Constant.LtiScopes.Ags.Score,
+            Constant.LtiScopes.Ags.ScoreReadonly,
+            Constant.LtiScopes.Nrps.MembershipReadonly
         };
     }
 }

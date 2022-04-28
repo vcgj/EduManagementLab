@@ -3,7 +3,7 @@
     /// <summary>
     /// LTI Advantage Library constants.
     /// </summary>
-    public static class Constants
+    public static class Constant
     {
         /// <summary>
         /// Deep linking content item types.

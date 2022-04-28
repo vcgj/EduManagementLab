@@ -9,6 +9,11 @@
   <ItemGroup>
     <PackageReference Include="IdentityServer4" Version="4.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.2" />
+    <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\LTI\LtiAdvantage\src\LtiAdvantage\LtiAdvantage.csproj" />
   </ItemGroup>
 
 </Project>
